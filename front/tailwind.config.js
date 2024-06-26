@@ -2,7 +2,17 @@
 export default {
   content: ['./src/**/*.{html,vue,js,ts}'],
   theme: {
-    extend: {}
+    colors: {
+      'dark-blue': '#556970',
+      'dark-green': '#607C68',
+      white: '#ffffff',
+      black: '#000000'
+    },
+    extend: {
+      backgroundImage: {
+        'texture-pattern': "url('@/assets/henry-co-unsplash.jpg')"
+      }
+    }
   },
   plugins: []
 }
