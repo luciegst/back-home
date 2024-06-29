@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue'
+import { useDeviceStore } from '@/stores/device'
+import { onMounted } from 'vue'
+
+const deviceStore = useDeviceStore()
+
+onMounted(() => {
+  window.addEventListener('resize', () => {
+    deviceStore.updateDevice()
+  })
+  deviceStore.updateDevice()
+})
 </script>
 
 <template>
