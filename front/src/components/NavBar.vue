@@ -26,12 +26,19 @@ const closeMenu = () => {
   <nav tabindex="-1" id="nav-example" class="h-full">
     <div class="flex justify-between bg-light-grey">
       <RouterLink to="/">
-        <img v-if="!isMobile" class="my-3 mx-3 px-1 py-1" src="@/assets/logo.svg" alt="logo site" />
         <img
           v-if="isMobile"
           class="my-3 mx-3 px-1 py-1"
           src="@/assets/mobile_logo.svg"
           alt="logo site"
+          data-unit-test="mobile_logo"
+        />
+        <img
+          v-else
+          class="my-3 mx-3 px-1 py-1"
+          src="@/assets/logo.svg"
+          alt="logo site"
+          data-unit-test="desktop_logo"
         />
       </RouterLink>
       <div class="flex">
