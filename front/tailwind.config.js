@@ -6,13 +6,10 @@ export default {
       'dark-blue': '#556970',
       'dark-green': '#607C68',
       white: '#ffffff',
-      black: '#000000'
+      black: '#000000',
+      'light-grey': '#e5e7eb'
     },
-    extend: {
-      backgroundImage: {
-        'texture-pattern': "url('@/assets/henry-co-unsplash.jpg')"
-      }
-    }
+    extend: {}
   },
   plugins: []
 }
