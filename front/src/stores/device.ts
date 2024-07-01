@@ -25,5 +25,5 @@ export const useDeviceStore = defineStore('device', () => {
   function updateDevice() {
     deviceType.value = getDeviceType()
   }
-  return { deviceType, updateDevice }
+  return { deviceType, getDeviceType, updateDevice }
 })
