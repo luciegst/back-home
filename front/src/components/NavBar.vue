@@ -47,7 +47,12 @@ const closeMenu = () => {
           aria-haspopup="true"
           @click="goToAdPage()"
         >
-          <img v-if="!isMobile" src="@/assets/icons/pencil-mark-plus.svg" alt="crayon" />
+          <img
+            v-if="!isMobile"
+            src="@/assets/icons/pencil-mark-plus.svg"
+            alt="crayon"
+            data-unit-test="desktop_pen_icon"
+          />
           Publier une annonce
         </button>
         <button
@@ -55,6 +60,7 @@ const closeMenu = () => {
           v-if="isMobile"
           class="cursor-pointer px-1 py-1 mr-3"
           aria-controls="dropdown-menu-mobile"
+          data-unit-test="mobile_menu_btn"
           @click="isMenuOpen = true"
         >
           <img src="@/assets/icons/menu.svg" alt="menu" />
@@ -67,7 +73,11 @@ const closeMenu = () => {
         />
       </div>
     </div>
-    <div v-if="!isMobile" class="py-3 px-3 border-solid border-b-2">
+    <div
+      v-if="!isMobile"
+      class="py-3 px-3 border-solid border-b-2"
+      data-unit-test="desktop_submenu"
+    >
       <ul class="flex gap-4 justify-center">
         <li>
           <RouterLink
