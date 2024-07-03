@@ -25,7 +25,7 @@ const closeMenu = () => {
 <template>
   <nav tabindex="-1" id="nav-example" class="h-full">
     <div class="flex justify-between bg-light-grey">
-      <RouterLink to="/">
+      <RouterLink to="/" data-unit-test="home_link">
         <img
           v-if="isMobile"
           class="my-3 mx-3 px-1 py-1"
@@ -45,6 +45,7 @@ const closeMenu = () => {
         <button
           class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold uppercase hover:bg-black hover:text-white"
           aria-haspopup="true"
+          data-unit-test="go_ad_page_btn"
           @click="goToAdPage()"
         >
           <img
@@ -83,6 +84,7 @@ const closeMenu = () => {
           <RouterLink
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
             to="/lost/dogs"
+            data-unit-test="lost_dogs_link"
             >Chiens perdus</RouterLink
           >
         </li>
@@ -90,6 +92,7 @@ const closeMenu = () => {
           <RouterLink
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
             to="/lost/cats"
+            data-unit-test="lost_cats_link"
             >Chats perdus</RouterLink
           >
         </li>

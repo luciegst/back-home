@@ -16,20 +16,21 @@ describe('NavBar', () => {
     routes: routes
   })
 
-  beforeEach(async () => {
-    const pinia = createTestingPinia({ createSpy: vi.fn })
-    setActivePinia(pinia)
-    store = useDeviceStore()
+  const pinia = createTestingPinia({ createSpy: vi.fn })
+  setActivePinia(pinia)
+  store = useDeviceStore()
 
-    router.push('/')
-    // After this line, router is ready
-    await router.isReady()
+  router.push('/')
+  router.isReady()
+  router.push = vi.fn()
 
-    wrapper = mount(NavBar, {
-      global: {
-        plugins: [pinia, router]
+  wrapper = mount(NavBar, {
+    global: {
+      plugins: [pinia, router],
+      stubs: {
+        teleport: true
       }
-    })
+    }
   })
 
   describe('when deviceType is mobile', () => {
@@ -68,6 +69,40 @@ describe('NavBar', () => {
       await wrapper.vm.$nextTick()
       const logo = wrapper.find('[data-unit-test="desktop_submenu"]')
       expect(logo.exists()).toBe(true)
+    })
+  })
+
+  describe('routes', () => {
+    it('ad page btn should open ad page', async () => {
+      const addPageBtn = wrapper.find('[data-unit-test="go_ad_page_btn"]')
+      await addPageBtn.trigger('click')
+      expect(router.push).toHaveBeenCalledWith({ name: 'ad.page' })
+    })
+    it('mobile_menu_btn should open submenu modal', async () => {
+      store.$patch({ deviceType: 'mobile' })
+      await wrapper.vm.$nextTick()
+      const mobileMenuBtn = wrapper.find('[data-unit-test="mobile_menu_btn"]')
+      await mobileMenuBtn.trigger('click')
+      const dropdownMobileBtn = wrapper.find('[data-unit-test="mobile_dropdown_menu"]')
+      expect(dropdownMobileBtn.exists()).toBe(true)
+    })
+    it('dogs link should go to lost dogs page', async () => {
+      store.$patch({ deviceType: 'desktop' })
+      await wrapper.vm.$nextTick()
+      const dogsLink = wrapper.find('[data-unit-test="lost_dogs_link"]')
+      expect(dogsLink.text()).toBe('Chiens perdus')
+      expect(dogsLink.attributes('href')).toBe('/lost/dogs')
+    })
+    it('cats link should go to lost cats page', async () => {
+      store.$patch({ deviceType: 'desktop' })
+      await wrapper.vm.$nextTick()
+      const catsLink = wrapper.find('[data-unit-test="lost_cats_link"]')
+      expect(catsLink.text()).toBe('Chats perdus')
+      expect(catsLink.attributes('href')).toBe('/lost/cats')
+    })
+    it('home link should go to home page', async () => {
+      const homeLink = wrapper.find('[data-unit-test="home_link"]')
+      expect(homeLink.attributes('href')).toBe('/')
     })
   })
 })

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import Modal from '../components/ui/Modal.vue'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
   visible: {
@@ -13,8 +12,6 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'close-modal'): void
 }>()
-
-const router = useRouter()
 
 const isVisible = ref<boolean>(false)
 
@@ -35,7 +32,7 @@ onMounted(() => {
     :ariaLabelledby="'nav menu mobile'"
     @update:model-value="emit('close-modal')"
   >
-    <div class="mt-20">
+    <div class="mt-20" data-unit-test="mobile_dropdown_menu">
       <ul class="flex flex-col text-center gap-4 justify-center">
         <li>
           <RouterLink
