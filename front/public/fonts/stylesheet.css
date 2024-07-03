@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'ryman_ecoregular';
+  src:
+    url('/fonts/RymanEco/rymaneco-regular-webfont.woff2') format('woff2'),
+    url('/fonts/RymanEco/rymaneco-regular-webfont.woff') format('woff'),
+    url('/fonts/RymanEco/RymanEco-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
