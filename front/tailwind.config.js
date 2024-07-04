@@ -9,7 +9,11 @@ export default {
       black: '#000000',
       'light-grey': '#e5e7eb'
     },
-    extend: {}
+    extend: {
+      gridTemplateColumns: {
+        'grid-auto-fit': 'repeat(auto-fit, minmax(400px, 0fr))'
+      }
+    }
   },
   plugins: []
 }

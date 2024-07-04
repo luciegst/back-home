@@ -68,7 +68,7 @@ const closeMenu = () => {
         </button>
         <MobileDropdownMenu
           v-if="isMenuOpen"
-          id="dropdown-menu-mobile"
+          :id="'dropdown-menu-mobile'"
           :visible="isMenuOpen"
           @close-modal="closeMenu"
         />

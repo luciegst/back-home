@@ -6,6 +6,10 @@ const props = defineProps({
   visible: {
     type: Boolean,
     required: true
+  },
+  id: {
+    type: String,
+    required: true
   }
 })
 
@@ -32,7 +36,7 @@ onMounted(() => {
     :ariaLabelledby="'nav menu mobile'"
     @update:model-value="emit('close-modal')"
   >
-    <div class="mt-20" data-unit-test="mobile_dropdown_menu">
+    <div class="mt-20" data-unit-test="mobile_dropdown_menu" :id="props.id">
       <ul class="flex flex-col text-center gap-4 justify-center">
         <li>
           <RouterLink
