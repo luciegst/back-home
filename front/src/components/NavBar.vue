@@ -23,9 +23,9 @@ const closeMenu = () => {
 </script>
 
 <template>
-  <nav tabindex="-1" id="nav-example" class="h-full">
+  <nav tabindex="-1" id="nav-example" class="h-full" data-cy="nav">
     <div class="flex justify-between bg-light-grey">
-      <RouterLink to="/" data-unit-test="home_link">
+      <RouterLink to="/" data-unit-test="home_link" data-cy="home_link">
         <img
           v-if="isMobile"
           class="my-3 mx-3 px-1 py-1"
@@ -46,6 +46,7 @@ const closeMenu = () => {
           class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold uppercase hover:bg-black hover:text-white"
           aria-haspopup="true"
           data-unit-test="go_ad_page_btn"
+          data-cy="go_ad_page_btn"
           @click="goToAdPage()"
         >
           <img
@@ -62,6 +63,7 @@ const closeMenu = () => {
           class="cursor-pointer px-1 py-1 mr-3"
           aria-controls="dropdown-menu-mobile"
           data-unit-test="mobile_menu_btn"
+          data-cy="mobile_menu_btn"
           @click="isMenuOpen = true"
         >
           <img src="@/assets/icons/menu.svg" alt="menu" />
@@ -74,7 +76,12 @@ const closeMenu = () => {
         />
       </div>
     </div>
-    <div v-if="!isMobile" class="py-3 px-3" data-unit-test="desktop_submenu">
+    <div
+      v-if="!isMobile"
+      class="py-3 px-3"
+      data-unit-test="desktop_submenu"
+      data-cy="desktop_submenu"
+    >
       <ul class="flex gap-4 justify-center">
         <li>
           <RouterLink
