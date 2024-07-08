@@ -43,7 +43,7 @@ function close() {
 </script>
 
 <template>
-  <Teleport to="body" :disabled="isMobile">
+  <Teleport data-unit-test="teleport" to="body" :disabled="isMobile">
     <div
       v-if="model"
       class="modal"
@@ -53,7 +53,7 @@ function close() {
       :aria-labelledby="ariaLabelledby"
     >
       <div class="modal-content" :style="{ margin, width }">
-        <button class="corner" @click="close()" aria-label="close">
+        <button class="corner" @click="close()" aria-label="close" data-unit-test="btn_close_modal">
           <img src="@/assets/icons/cross.svg" alt="croix" />
         </button>
 

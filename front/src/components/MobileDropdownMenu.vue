@@ -43,6 +43,7 @@ onMounted(() => {
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
             :to="{ name: 'lost.dogs' }"
             @click.native="closeModal()"
+            data-unit-test="link_dogs"
             >Chiens perdus</RouterLink
           >
         </li>
@@ -51,6 +52,7 @@ onMounted(() => {
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
             :to="{ name: 'lost.cats' }"
             @click.native="closeModal()"
+            data-unit-test="link_cats"
             >Chats perdus</RouterLink
           >
         </li>

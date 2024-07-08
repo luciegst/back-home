@@ -74,11 +74,7 @@ const closeMenu = () => {
         />
       </div>
     </div>
-    <div
-      v-if="!isMobile"
-      class="py-3 px-3 border-solid border-b-2"
-      data-unit-test="desktop_submenu"
-    >
+    <div v-if="!isMobile" class="py-3 px-3" data-unit-test="desktop_submenu">
       <ul class="flex gap-4 justify-center">
         <li>
           <RouterLink
