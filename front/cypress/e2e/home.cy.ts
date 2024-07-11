@@ -65,4 +65,27 @@ describe('HomeView page', () => {
       cy.url().should('include', '/lost/cats')
     })
   })
+
+  context('all resolution', () => {
+    beforeEach(() => {
+      cy.visit('/')
+    })
+
+    it('should display home view content and have correct elements', () => {
+      cy.get('[data-cy="homeview_main_title"]').should('be.visible')
+      cy.get('[data-cy="homeview_subtitle"]').should('be.visible')
+      cy.get('[data-cy="homeview_grid_content"]').each(($el, index) => {
+        const anchor = $el.find('a')
+        const button = $el.find('button')
+        const img = $el.find('img')
+        cy.wrap(anchor).should('have.attr', 'href')
+        cy.wrap(button).should('exist')
+        cy.wrap(img).should('exist')
+
+        const expectedLinks = ['/lost/cats', '/lost/dogs']
+        cy.wrap(anchor).should('have.attr', 'href', expectedLinks[index])
+        cy.wrap(button).should('have.attr', 'data-url', expectedLinks[index])
+      })
+    })
+  })
 })

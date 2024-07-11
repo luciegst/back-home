@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const props = defineProps({
   img: {
     type: String,
@@ -17,13 +19,22 @@ const props = defineProps({
     required: true
   }
 })
+
+const goToLinkPage = (linkPath: string) => {
+  router.push({ path: linkPath })
+}
 </script>
 
 <template>
-  <div tabindex="0" class="w-fit relative overflow-hidden">
-    <RouterLink :to="props.href">
-      <img :src="props.img" :alt="props.alt" class="zoom-img" />
-      <button class="px-5 py-3 bg-dark-green absolute bottom-4 right-0 font-semibold">
+  <div tabindex="0" class="w-fit relative overflow-hidden" data-cy="home_card">
+    <RouterLink :to="props.href" data-cy="home_card_link">
+      <img :src="props.img" :alt="props.alt" class="zoom-img" data-cy="home_card_img" />
+      <button
+        class="px-5 py-3 bg-dark-green absolute bottom-4 right-0 font-semibold"
+        data-cy="home_card_btn"
+        :data-url="props.href"
+        @click="goToLinkPage(props.href)"
+      >
         {{ props.btnText }}
       </button>
     </RouterLink>
