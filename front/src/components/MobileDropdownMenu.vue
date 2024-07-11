@@ -36,7 +36,12 @@ onMounted(() => {
     :ariaLabelledby="'nav menu mobile'"
     @update:model-value="emit('close-modal')"
   >
-    <div class="mt-20" data-unit-test="mobile_dropdown_menu" :id="props.id">
+    <div
+      class="mt-20"
+      :id="props.id"
+      data-unit-test="mobile_dropdown_menu"
+      data-cy="mobile_menu_dropdown"
+    >
       <ul class="flex flex-col text-center gap-4 justify-center">
         <li>
           <RouterLink
@@ -44,6 +49,7 @@ onMounted(() => {
             :to="{ name: 'lost.dogs' }"
             @click.native="closeModal()"
             data-unit-test="link_dogs"
+            data-cy="link_dogs_mobile"
             >Chiens perdus</RouterLink
           >
         </li>
@@ -53,6 +59,7 @@ onMounted(() => {
             :to="{ name: 'lost.cats' }"
             @click.native="closeModal()"
             data-unit-test="link_cats"
+            data-cy="link_cats_mobile"
             >Chats perdus</RouterLink
           >
         </li>

@@ -32,6 +32,7 @@ const closeMenu = () => {
           src="@/assets/mobile_logo.svg"
           alt="logo site"
           data-unit-test="mobile_logo"
+          data-cy="mobile_logo"
         />
         <img
           v-else
@@ -39,6 +40,7 @@ const closeMenu = () => {
           src="@/assets/logo.svg"
           alt="logo site"
           data-unit-test="desktop_logo"
+          data-cy="desktop_logo"
         />
       </RouterLink>
       <div class="flex">
@@ -54,6 +56,7 @@ const closeMenu = () => {
             src="@/assets/icons/pencil-mark-plus.svg"
             alt="crayon"
             data-unit-test="desktop_pen_icon"
+            data-cy="desktop_pen_icon"
           />
           Publier une annonce
         </button>
