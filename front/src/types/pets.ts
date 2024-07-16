@@ -1,9 +1,10 @@
 export type LostCats = {
   id: Number
-  name: String
-  gender: String
-  imageUrl: String
-  color: String
-  description: String
+  name: string
+  gender: string
+  image_url: string
+  color: string
+  description: string
   department_number: Number
+  breed: string
 }

@@ -1,5 +1,5 @@
-import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { mount, VueWrapper } from '@vue/test-utils'
+import { describe, expect, it, vi } from 'vitest'
 import { createTestingPinia } from '@pinia/testing'
 import { useDeviceStore } from '@/stores/device'
 import NavBar from '../NavBar.vue'
@@ -8,7 +8,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from '../../router/index'
 
 describe('NavBar', () => {
-  let wrapper: ReturnType<typeof mount>
+  let wrapper: VueWrapper<InstanceType<typeof NavBar>>
   let store: ReturnType<typeof useDeviceStore>
 
   const router = createRouter({

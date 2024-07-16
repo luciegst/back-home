@@ -23,22 +23,29 @@ const closeMenu = () => {
 </script>
 
 <template>
-  <nav tabindex="-1" id="nav-example" class="h-full">
+  <nav tabindex="-1" id="nav-example" class="h-full" data-cy="nav">
     <div class="flex justify-between bg-light-grey">
-      <RouterLink to="/" data-unit-test="home_link">
+      <RouterLink to="/" data-unit-test="home_link" data-cy="home_link">
         <img
           v-if="isMobile"
           class="my-3 mx-3 px-1 py-1"
           src="@/assets/mobile_logo.svg"
           alt="logo site"
+          width="58px"
+          height="58px"
           data-unit-test="mobile_logo"
+          data-cy="mobile_logo"
         />
         <img
           v-else
           class="my-3 mx-3 px-1 py-1"
+          width="208px"
+          height="45px"
+          fetchpriority="high"
           src="@/assets/logo.svg"
           alt="logo site"
           data-unit-test="desktop_logo"
+          data-cy="desktop_logo"
         />
       </RouterLink>
       <div class="flex">
@@ -46,13 +53,17 @@ const closeMenu = () => {
           class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold uppercase hover:bg-black hover:text-white"
           aria-haspopup="true"
           data-unit-test="go_ad_page_btn"
+          data-cy="go_ad_page_btn"
           @click="goToAdPage()"
         >
           <img
             v-if="!isMobile"
             src="@/assets/icons/pencil-mark-plus.svg"
             alt="crayon"
+            height="32px"
+            width="32px"
             data-unit-test="desktop_pen_icon"
+            data-cy="desktop_pen_icon"
           />
           Publier une annonce
         </button>
@@ -62,13 +73,14 @@ const closeMenu = () => {
           class="cursor-pointer px-1 py-1 mr-3"
           aria-controls="dropdown-menu-mobile"
           data-unit-test="mobile_menu_btn"
+          data-cy="mobile_menu_btn"
           @click="isMenuOpen = true"
         >
           <img src="@/assets/icons/menu.svg" alt="menu" />
         </button>
         <MobileDropdownMenu
           v-if="isMenuOpen"
-          id="dropdown-menu-mobile"
+          :id="'dropdown-menu-mobile'"
           :visible="isMenuOpen"
           @close-modal="closeMenu"
         />
@@ -76,24 +88,25 @@ const closeMenu = () => {
     </div>
     <div
       v-if="!isMobile"
-      class="py-3 px-3 border-solid border-b-2"
+      class="py-3 px-3"
       data-unit-test="desktop_submenu"
+      data-cy="desktop_submenu"
     >
       <ul class="flex gap-4 justify-center">
-        <li>
-          <RouterLink
-            class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
-            to="/lost/dogs"
-            data-unit-test="lost_dogs_link"
-            >Chiens perdus</RouterLink
-          >
-        </li>
         <li>
           <RouterLink
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
             to="/lost/cats"
             data-unit-test="lost_cats_link"
             >Chats perdus</RouterLink
+          >
+        </li>
+        <li>
+          <RouterLink
+            class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
+            to="/lost/dogs"
+            data-unit-test="lost_dogs_link"
+            >Chiens perdus</RouterLink
           >
         </li>
       </ul>

@@ -7,9 +7,13 @@ export default {
       'dark-green': '#607C68',
       white: '#ffffff',
       black: '#000000',
-      'light-grey': '#e5e7eb'
+      'light-grey': '#f3f4f6'
     },
-    extend: {}
+    extend: {
+      gridTemplateColumns: {
+        'grid-auto-fit': 'repeat(auto-fit, minmax(400px, 0fr))'
+      }
+    }
   },
   plugins: []
 }

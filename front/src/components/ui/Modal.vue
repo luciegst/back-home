@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useDeviceStore } from '@/stores/device'
+
+const deviceStore = useDeviceStore()
+const isMobile = computed(() => deviceStore.deviceType === 'mobile')
 
 const props = defineProps({
   modelValue: {
@@ -39,7 +43,7 @@ function close() {
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport data-unit-test="teleport" to="body" :disabled="isMobile">
     <div
       v-if="model"
       class="modal"
@@ -49,7 +53,7 @@ function close() {
       :aria-labelledby="ariaLabelledby"
     >
       <div class="modal-content" :style="{ margin, width }">
-        <button class="corner" @click="close()" aria-label="close">
+        <button class="corner" @click="close()" aria-label="close" data-unit-test="btn_close_modal">
           <img src="@/assets/icons/cross.svg" alt="croix" />
         </button>
 
