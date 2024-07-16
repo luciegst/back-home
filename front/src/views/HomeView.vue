@@ -21,7 +21,7 @@ import HomeCard from '@/components/ui/HomeCard.vue'
     </div>
 
     <div
-      class="grid grid-cols-grid-auto-fit gap-8 justify-center py-14"
+      class="grid md:grid-cols-grid-auto-fit gap-8 justify-center py-14"
       data-cy="homeview_grid_content"
     >
       <HomeCard

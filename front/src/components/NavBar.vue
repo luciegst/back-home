@@ -31,12 +31,17 @@ const closeMenu = () => {
           class="my-3 mx-3 px-1 py-1"
           src="@/assets/mobile_logo.svg"
           alt="logo site"
+          width="58px"
+          height="58px"
           data-unit-test="mobile_logo"
           data-cy="mobile_logo"
         />
         <img
           v-else
           class="my-3 mx-3 px-1 py-1"
+          width="208px"
+          height="45px"
+          fetchpriority="high"
           src="@/assets/logo.svg"
           alt="logo site"
           data-unit-test="desktop_logo"
@@ -55,6 +60,8 @@ const closeMenu = () => {
             v-if="!isMobile"
             src="@/assets/icons/pencil-mark-plus.svg"
             alt="crayon"
+            height="32px"
+            width="32px"
             data-unit-test="desktop_pen_icon"
             data-cy="desktop_pen_icon"
           />
@@ -89,17 +96,17 @@ const closeMenu = () => {
         <li>
           <RouterLink
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
-            to="/lost/dogs"
-            data-unit-test="lost_dogs_link"
-            >Chiens perdus</RouterLink
+            to="/lost/cats"
+            data-unit-test="lost_cats_link"
+            >Chats perdus</RouterLink
           >
         </li>
         <li>
           <RouterLink
             class="text-base font-semibold uppercase px-2 py-2 hover:border-b-4"
-            to="/lost/cats"
-            data-unit-test="lost_cats_link"
-            >Chats perdus</RouterLink
+            to="/lost/dogs"
+            data-unit-test="lost_dogs_link"
+            >Chiens perdus</RouterLink
           >
         </li>
       </ul>
