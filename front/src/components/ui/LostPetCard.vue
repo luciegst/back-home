@@ -21,11 +21,14 @@ const props = defineProps({
         :src="props.pet.image_url"
         alt="image de l'animal perdu"
         loading="lazy"
+        data-cy="lost_pet_img"
       />
     </div>
     <div class="grid items-center">
-      <h2 class="text-center text-xl px-2.5 py-2.5">{{ props.pet.name }}</h2>
-      <ul class="px-2.5 py-2.5">
+      <h2 class="text-center text-xl px-2.5 py-2.5" data-cy="lost_pet_name">
+        {{ props.pet.name }}
+      </h2>
+      <ul class="px-2.5 py-2.5" data-cy="lost_pet_list">
         <li><strong class="text-dark-blue text-lg">Sexe: </strong> {{ props.pet.gender }}</li>
         <li><strong class="text-dark-blue text-lg">Couleur:</strong> {{ props.pet.color }}</li>
         <li><strong class="text-dark-blue text-lg">Race:</strong> {{ props.pet.breed }}</li>
@@ -35,7 +38,7 @@ const props = defineProps({
         </li>
       </ul>
 
-      <p class="text-truncate mx-2.5 my-3">
+      <p class="text-truncate mx-2.5 my-3" data-cy="lost_pet_description">
         {{ props.pet.description }}
       </p>
     </div>
