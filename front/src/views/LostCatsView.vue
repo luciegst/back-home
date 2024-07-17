@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue'
 import { fetchLostCats } from '@/services/apiPets'
 import { type LostCats } from '@/types/pets'
 import LostPetCard from '@/components/ui/LostPetCard.vue'
+import Loader from '@/components/ui/Loader.vue'
 
 const cats = ref<LostCats[]>([])
 const loading = ref<boolean>(false)
@@ -29,8 +30,10 @@ onMounted(() => {
 
 <template>
   <div>
-    <template v-if="!loading">
-      <div data-unit-test="loading">loading</div>
+    <template v-if="loading">
+      <div data-unit-test="loading">
+        <Loader :ariaBusy="loading" />
+      </div>
     </template>
     <template v-else>
       <div class="bg-light-grey pt-14 pb-14">
