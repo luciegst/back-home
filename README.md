@@ -26,9 +26,14 @@ _Back End_ :
 ## Get Started
 
 - Clone the project
-- Install all dependencies
-- Go to the root of the front folder and launch `yarn vite`
-- Go to the root of the back folder and launch `nodemon server`
+- Go to the root of the front folder and then :
+
+  1. `yarn install`
+  2. launch project with `yarn vite`
+
+- Go to the root of the back folder and then :
+  1. `npm install`
+  2. launch `node server` or `nodemon server` (if you use nodemon)
 
 ## Accessibility
 
