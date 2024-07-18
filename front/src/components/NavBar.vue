@@ -49,8 +49,16 @@ const closeMenu = () => {
         />
       </RouterLink>
       <div class="flex">
+        <button>
+          <img
+            src="@/assets/icons/user-profile-circle.svg"
+            alt="profil utilisateur"
+            height="32px"
+            width="32px"
+          />
+        </button>
         <button
-          class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold uppercase hover:bg-black hover:text-white"
+          class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold hover:bg-black hover:text-white"
           aria-haspopup="true"
           data-unit-test="go_ad_page_btn"
           data-cy="go_ad_page_btn"
