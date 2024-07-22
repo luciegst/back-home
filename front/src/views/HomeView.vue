@@ -25,13 +25,13 @@ import HomeCard from '@/components/ui/HomeCard.vue'
       data-cy="homeview_grid_content"
     >
       <HomeCard
-        :img="'../src/assets/cards/cat_home_card.jpg'"
+        :img="'../src/assets/cards/cat_home_card.webp'"
         :alt="'image de chat'"
         :btn-text="'Les chats'"
         :href="'/lost/cats'"
       />
       <HomeCard
-        :img="'../src/assets/cards/dog_home_card.jpg'"
+        :img="'../src/assets/cards/dog_home_card.webp'"
         :alt="'image de chien'"
         :btn-text="'Les chiens'"
         :href="'/lost/dogs'"

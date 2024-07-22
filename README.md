@@ -26,7 +26,7 @@ _Back End_ :
 ## Get Started - Configurations
 
 - Clone the project
-- In your terminal go to the root of the front folder and then :
+- In your terminal go to the root of the front folder :
 
   1. `cd front`
 

@@ -28,7 +28,14 @@ const goToLinkPage = (linkPath: string) => {
 <template>
   <div tabindex="0" class="w-fit relative overflow-hidden" data-cy="home_card">
     <RouterLink :to="props.href" data-cy="home_card_link">
-      <img :src="props.img" :alt="props.alt" class="zoom-img" data-cy="home_card_img" />
+      <img
+        :src="props.img"
+        :alt="props.alt"
+        class="zoom-img"
+        data-cy="home_card_img"
+        width="400"
+        height="268"
+      />
       <button
         class="px-5 py-3 bg-dark-green absolute bottom-4 right-0 font-semibold"
         data-cy="home_card_btn"
