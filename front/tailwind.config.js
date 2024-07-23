@@ -7,7 +7,8 @@ export default {
       'dark-green': '#607C68',
       white: '#ffffff',
       black: '#000000',
-      'light-grey': '#f3f4f6'
+      'light-grey': '#f3f4f6',
+      red: '#dc2626'
     },
     extend: {
       gridTemplateColumns: {

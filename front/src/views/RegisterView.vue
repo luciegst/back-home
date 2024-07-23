@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 const passwordType = ref<string>('password')
 const password = ref<string>('')
+const email = ref<string>('')
 const patternPassword = ref<RegExp>(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/)
+const patternEmail = ref<RegExp>(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
 
 const patternUpperCase = ref<RegExp>(/(?=.*[A-Z])/)
 const patternLowerCase = ref<RegExp>(/(?=.*[a-z])/)
@@ -15,6 +17,25 @@ const hasLowerCase = ref<boolean>(false)
 const hasOneDigit = ref<boolean>(false)
 const hasSpecialChar = ref<boolean>(false)
 const hasMinLength = ref<boolean>(false)
+const hasCorrectEmail = ref<boolean>(false)
+const hasEmailError = ref<boolean>(false)
+const hasPasswordError = ref<boolean>(false)
+
+const hasValidEmail = computed(() => hasCorrectEmail.value)
+
+const formIsValid = () => {
+  return hasValidPassword.value && hasValidEmail.value
+}
+
+const checkEmail = () => {
+  patternEmail.value.test(email.value)
+    ? (hasCorrectEmail.value = true)
+    : (hasCorrectEmail.value = false)
+}
+
+const checkEmailInputValid = () => {
+  return !hasValidEmail.value ? (hasEmailError.value = true) : (hasEmailError.value = false)
+}
 
 const showPassword = () => {
   passwordType.value = 'text'
@@ -22,6 +43,21 @@ const showPassword = () => {
 
 const hidePassword = () => {
   passwordType.value = 'password'
+}
+
+const hasValidPassword = computed(
+  () =>
+    hasLowerCase.value &&
+    hasUpperCase.value &&
+    hasMinLength.value &&
+    hasOneDigit.value &&
+    hasSpecialChar.value
+)
+
+const checkPasswordInputValid = () => {
+  return !hasValidPassword.value
+    ? (hasPasswordError.value = true)
+    : (hasPasswordError.value = false)
 }
 
 const checkPassword = () => {
@@ -63,13 +99,23 @@ const checkPassword = () => {
             <label class="ryman-eco text-dark-blue font-bold" for="last-name"> NOM </label>
             <input class="border border-1 px-2 py-2.5" type="text" id="last-name" />
             <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
-            <input
-              class="border border-1 px-2 py-2.5"
-              type="text"
-              id="email"
-              aria-required="true"
-              required
-            />
+            <div>
+              <input
+                v-model="email"
+                class="border border-1 px-2 py-2.5 w-full"
+                type="text"
+                id="email"
+                aria-required="true"
+                aria-describedby="email-error"
+                required
+                @keyup="checkEmail"
+                @blur="checkEmailInputValid"
+              />
+              <p v-if="hasEmailError" id="email-error" class="text-red">
+                Veuillez saisir une adresse email valide.
+              </p>
+            </div>
+
             <div id="hint-password" class="grid gap-2">
               <h2 class="text-xl ryman-eco text-dark-blue font-bold">
                 Choisir votre mot de passe :
@@ -104,6 +150,7 @@ const checkPassword = () => {
                   aria-describedby="password-error"
                   required
                   @keyup="checkPassword"
+                  @blur="checkPasswordInputValid"
                 />
                 <button
                   v-if="passwordType === 'password'"
@@ -116,10 +163,20 @@ const checkPassword = () => {
                   Masquer
                 </button>
               </div>
-              <p id="password-error">Veuillez saisir un mot de passe valide.</p>
+              <p v-if="hasPasswordError" id="password-error" class="text-red">
+                Veuillez saisir un mot de passe valide.
+              </p>
             </div>
 
-            <button class="px-2 py-2.5 bg-dark-green mt-3 font-bold" type="submit">Créer</button>
+            <button
+              class="px-2 py-2.5 bg-dark-green mt-3 font-bold"
+              type="submit"
+              :disabled="!formIsValid()"
+              :aria-disabled="!formIsValid()"
+              :class="{ disabled: !formIsValid() }"
+            >
+              Créer
+            </button>
           </fieldset>
         </form>
       </div>
@@ -129,5 +186,8 @@ const checkPassword = () => {
 <style scoped>
 .valid {
   color: theme('colors.dark-green');
+}
+.disabled {
+  background-color: theme('colors.light-grey');
 }
 </style>
