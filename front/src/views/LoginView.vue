@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const loginPart = ref<HTMLInputElement | null>(null)
 const passwordType = ref<string>('password')
 
@@ -9,6 +12,10 @@ const showPassword = () => {
 
 const hidePassword = () => {
   passwordType.value = 'password'
+}
+
+const goToCreateAccount = () => {
+  router.push({ name: 'account.register' })
 }
 
 onMounted(() => {
@@ -29,48 +36,51 @@ onMounted(() => {
       </h1>
     </div>
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
-      <form aria-label="Formulaire de connexion" class="w-full w-[416px]">
-        <fieldset class="flex flex-col gap-3">
-          <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
-          <input
-            class="border border-1 px-2 py-2.5"
-            type="text"
-            id="email"
-            aria-required="true"
-            required
-          />
-          <label class="ryman-eco text-dark-blue font-bold" for="password"> MOT DE PASSE </label>
-          <div class="border border-1 px-2 py-2.5 flex">
+      <div class="w-[26rem]">
+        <form aria-label="Formulaire de connexion">
+          <fieldset class="flex flex-col gap-3">
+            <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
             <input
-              class="w-full"
-              :type="passwordType"
-              id="password"
+              class="border border-1 px-2 py-2.5"
+              type="text"
+              id="email"
               aria-required="true"
               required
             />
-            <button
-              v-if="passwordType === 'password'"
-              aria-label="Afficher le mot de passe"
-              @click="showPassword"
-            >
-              Afficher
-            </button>
-            <button v-else aria-label="Masquer le mot de passe" @click="hidePassword">
-              Masquer
-            </button>
-          </div>
+            <label class="ryman-eco text-dark-blue font-bold" for="password"> MOT DE PASSE </label>
+            <div class="border border-1 px-2 py-2.5 flex">
+              <input
+                class="w-full"
+                :type="passwordType"
+                id="password"
+                aria-required="true"
+                required
+              />
+              <button
+                v-if="passwordType === 'password'"
+                aria-label="Afficher le mot de passe"
+                @click="showPassword"
+              >
+                Afficher
+              </button>
+              <button v-else aria-label="Masquer le mot de passe" @click="hidePassword">
+                Masquer
+              </button>
+            </div>
 
-          <button class="px-2 py-2.5 bg-dark-green mt-3 font-bold" type="submit">
-            Se connecter
-          </button>
-        </fieldset>
-
+            <button class="px-2 py-2.5 bg-dark-green mt-3 font-bold" type="submit">
+              Se connecter
+            </button>
+          </fieldset>
+        </form>
         <div class="mt-12 flex flex-col gap-1">
           <!-- TODO: lost password in a next US -->
           <!-- <button class="underline text-left font-bold">Mot de passe oublié ?</button> -->
-          <button class="underline text-left font-bold">Créer un compte</button>
+          <button class="underline text-left font-bold" @click="goToCreateAccount">
+            Créer un compte
+          </button>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
