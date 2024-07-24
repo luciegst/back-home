@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import Banner from '@/components/ui/Banner.vue'
+import { createUser } from '@/services/apiUser'
 
 const passwordType = ref<string>('password')
 const password = ref<string>('')
 const email = ref<string>('')
+const firstName = ref<string>('')
+const lastName = ref<string>('')
 const patternPassword = ref<RegExp>(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/)
 const patternEmail = ref<RegExp>(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
 
@@ -24,6 +27,7 @@ const hasEmailError = ref<boolean>(false)
 const hasPasswordError = ref<boolean>(false)
 
 const hasValidEmail = computed(() => hasCorrectEmail.value)
+const patternPasswordString = computed(() => patternPassword.value.source)
 
 const formIsValid = () => {
   return hasValidPassword.value && hasValidEmail.value
@@ -81,18 +85,42 @@ const checkPassword = () => {
     ? (hasSpecialChar.value = true)
     : (hasSpecialChar.value = false)
 }
+
+const submitRegisterForm = async () => {
+  const params = {
+    first_name: firstName.value,
+    last_name: lastName.value,
+    email: email.value,
+    password: password.value
+  }
+  try {
+    await createUser(params)
+  } catch (error) {
+    console.error(error)
+  }
+}
 </script>
 <template>
   <div>
     <Banner :title="'inscription'" />
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
       <div class="w-[26rem]">
-        <form aria-label="Formulaire d'inscription">
+        <form aria-label="Formulaire d'inscription" @submit.prevent>
           <fieldset class="flex flex-col gap-3">
             <label class="ryman-eco text-dark-blue font-bold" for="first-name"> PRÉNOM </label>
-            <input class="border border-1 px-2 py-2.5" type="text" id="first-name" />
+            <input
+              v-model="firstName"
+              class="border border-1 px-2 py-2.5"
+              type="text"
+              id="first-name"
+            />
             <label class="ryman-eco text-dark-blue font-bold" for="last-name"> NOM </label>
-            <input class="border border-1 px-2 py-2.5" type="text" id="last-name" />
+            <input
+              v-model="lastName"
+              class="border border-1 px-2 py-2.5"
+              type="text"
+              id="last-name"
+            />
             <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
             <div>
               <input
@@ -139,9 +167,9 @@ const checkPassword = () => {
                 <input
                   v-model="password"
                   class="w-full"
-                  :type="passwordType"
-                  :pattern="String(patternPassword)"
                   id="password"
+                  :type="passwordType"
+                  :pattern="patternPasswordString"
                   aria-required="true"
                   aria-describedby="password-error"
                   required
@@ -170,6 +198,7 @@ const checkPassword = () => {
               :disabled="!formIsValid()"
               :aria-disabled="!formIsValid()"
               :class="{ disabled: !formIsValid() }"
+              @click="submitRegisterForm()"
             >
               Créer
             </button>

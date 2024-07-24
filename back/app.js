@@ -1,9 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { password, userName, clusterName, dbName } = require("./conf");
+const bodyParser = require("body-parser");
 const app = express();
 
-const Cat = require("./models/cats");
+const petsRoutes = require("./routes/pets");
+const userRoutes = require("./routes/user");
 
 const dbURI = `mongodb+srv://${userName}:${password}@${clusterName}/${dbName}?retryWrites=true&w=majority`;
 
@@ -26,18 +28,13 @@ app.use((req, res, next) => {
 });
 
 app.disable("x-powered-by");
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("GET request to the homepage");
 });
 
-app.get("/lost/cats", async (req, res, next) => {
-  try {
-    const cats = await Cat.find();
-    res.status(200).json(cats);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+app.use("/api/", petsRoutes);
+app.use("/api/", userRoutes);
 
 module.exports = app;
