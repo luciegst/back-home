@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Banner from '@/components/ui/Banner.vue'
 
 const router = useRouter()
 const loginPart = ref<HTMLInputElement | null>(null)
@@ -27,14 +28,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="bg-light-grey pt-14 pb-14">
-      <h1
-        class="ryman-eco font-bold text-dark-blue text-2xl text-center after:block after:w-40 after:bg-dark-green after:h-1 after:mx-auto after:mt-2"
-        data-cy="lostcatsview_main_title"
-      >
-        CONNEXION
-      </h1>
-    </div>
+    <Banner :title="'Connexion'" />
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
       <div class="w-[26rem]">
         <form aria-label="Formulaire de connexion">

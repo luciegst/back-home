@@ -4,6 +4,7 @@ import { fetchLostCats } from '@/services/apiPets'
 import { type LostCats } from '@/types/pets'
 import LostPetCard from '@/components/ui/LostPetCard.vue'
 import Loader from '@/components/ui/Loader.vue'
+import Banner from '@/components/ui/Banner.vue'
 
 const cats = ref<LostCats[]>([])
 const loading = ref<boolean>(false)
@@ -36,14 +37,7 @@ onMounted(() => {
       </div>
     </template>
     <template v-else>
-      <div class="bg-light-grey pt-14 pb-14">
-        <h1
-          class="ryman-eco font-bold text-dark-blue text-2xl text-center after:block after:w-40 after:bg-dark-green after:h-1 after:mx-auto after:mt-2"
-          data-cy="lostcatsview_main_title"
-        >
-          LES CHATS
-        </h1>
-      </div>
+      <Banner :title="'les chats'" :data-c-y="'lostcatsview_main_title'" />
       <div
         v-if="cats.length"
         class="pt-14 pb-14 grid md:grid-cols-grid-auto-fit justify-center gap-6"

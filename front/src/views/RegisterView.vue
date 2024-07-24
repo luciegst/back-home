@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import Banner from '@/components/ui/Banner.vue'
+
 const passwordType = ref<string>('password')
 const password = ref<string>('')
 const email = ref<string>('')
@@ -82,14 +84,7 @@ const checkPassword = () => {
 </script>
 <template>
   <div>
-    <div class="bg-light-grey pt-14 pb-14">
-      <h1
-        class="ryman-eco font-bold text-dark-blue text-2xl text-center after:block after:w-40 after:bg-dark-green after:h-1 after:mx-auto after:mt-2"
-        data-cy="lostcatsview_main_title"
-      >
-        INSCRIPTION
-      </h1>
-    </div>
+    <Banner :title="'inscription'" />
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
       <div class="w-[26rem]">
         <form aria-label="Formulaire d'inscription">
@@ -103,6 +98,7 @@ const checkPassword = () => {
               <input
                 v-model="email"
                 class="border border-1 px-2 py-2.5 w-full"
+                :class="{ error: hasEmailError }"
                 type="text"
                 id="email"
                 aria-required="true"
@@ -139,7 +135,7 @@ const checkPassword = () => {
             </div>
             <label class="ryman-eco text-dark-blue font-bold" for="password"> MOT DE PASSE </label>
             <div>
-              <div class="border border-1 px-2 py-2.5 flex">
+              <div class="border border-1 px-2 py-2.5 flex" :class="{ error: hasPasswordError }">
                 <input
                   v-model="password"
                   class="w-full"
@@ -186,6 +182,9 @@ const checkPassword = () => {
 <style scoped>
 .valid {
   color: theme('colors.dark-green');
+}
+.error {
+  border: 2px solid theme('colors.red');
 }
 .disabled {
   background-color: theme('colors.light-grey');
