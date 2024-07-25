@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import Banner from '@/components/ui/Banner.vue'
 import { createUser } from '@/services/apiUser'
 import { useRouter } from 'vue-router'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 
 const router = useRouter()
 
@@ -120,26 +120,28 @@ const submitRegisterForm = async () => {
 </script>
 <template>
   <div>
-    <Banner :title="'inscription'" />
+    <Banner :data-c-y="'register_banner'" :title="'inscription'" />
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
       <div class="w-[26rem]">
-        <form aria-label="Formulaire d'inscription" @submit.prevent>
+        <form aria-label="Formulaire d'inscription" @submit.prevent data-cy="register_form">
           <fieldset class="flex flex-col gap-3">
-            <label class="ryman-eco text-dark-blue font-bold" for="first-name"> PRÉNOM </label>
+            <label class="ryman-eco text-dark-blue font-bold" for="first-name">PRÉNOM</label>
             <input
               v-model="firstName"
+              name="first-name"
               class="border border-1 px-2 py-2.5"
               type="text"
               id="first-name"
             />
-            <label class="ryman-eco text-dark-blue font-bold" for="last-name"> NOM </label>
+            <label class="ryman-eco text-dark-blue font-bold" for="last-name">NOM</label>
             <input
               v-model="lastName"
               class="border border-1 px-2 py-2.5"
               type="text"
+              name="last-name"
               id="last-name"
             />
-            <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
+            <label class="ryman-eco text-dark-blue font-bold" for="email">COURRIEL</label>
             <div>
               <input
                 v-model="email"
@@ -147,13 +149,21 @@ const submitRegisterForm = async () => {
                 :class="{ error: hasEmailError }"
                 type="text"
                 id="email"
+                name="email"
                 aria-required="true"
                 aria-describedby="email-error"
                 required
                 @keyup="checkEmail"
                 @blur="checkEmailInputValid"
+                data-unit-test="email"
               />
-              <p role="alert" v-if="hasEmailError" id="email-error" class="text-red">
+              <p
+                role="alert"
+                v-if="hasEmailError"
+                id="email-error"
+                class="text-red"
+                data-unit-test="email_error"
+              >
                 Veuillez saisir une adresse email valide.
               </p>
             </div>
@@ -164,28 +174,48 @@ const submitRegisterForm = async () => {
               </h2>
               <div class="border-dark-green border-l-4 pl-8">
                 <p>Pour créer votre mot de passe, utiliser:</p>
-                <ul class="list-disc pl-4">
-                  <li>au moins <strong :class="{ valid: hasMinLength }">12 caractères</strong></li>
+                <ul class="list-disc pl-4" data-cy="pwd_list">
                   <li>
-                    au moins <strong :class="{ valid: hasUpperCase }">1 lettre en majuscule</strong>
+                    au moins
+                    <strong data-unit-test="pwd_min_length" :class="{ valid: hasMinLength }"
+                      >12 caractères</strong
+                    >
                   </li>
                   <li>
-                    au moins <strong :class="{ valid: hasLowerCase }">1 lettre en minuscule</strong>
+                    au moins
+                    <strong data-unit-test="pwd_uppercase" :class="{ valid: hasUpperCase }"
+                      >1 lettre en majuscule</strong
+                    >
                   </li>
-                  <li>au moins <strong :class="{ valid: hasOneDigit }">1 chiffre</strong></li>
                   <li>
-                    au moins <strong :class="{ valid: hasSpecialChar }">1 caractère spécial</strong>
+                    au moins
+                    <strong data-unit-test="pwd_lowercase" :class="{ valid: hasLowerCase }"
+                      >1 lettre en minuscule</strong
+                    >
+                  </li>
+                  <li>
+                    au moins
+                    <strong data-unit-test="pwd_digit" :class="{ valid: hasOneDigit }"
+                      >1 chiffre</strong
+                    >
+                  </li>
+                  <li>
+                    au moins
+                    <strong data-unit-test="pwd_special_char" :class="{ valid: hasSpecialChar }"
+                      >1 caractère spécial</strong
+                    >
                   </li>
                 </ul>
               </div>
             </div>
-            <label class="ryman-eco text-dark-blue font-bold" for="password"> MOT DE PASSE </label>
+            <label class="ryman-eco text-dark-blue font-bold" for="password">MOT DE PASSE</label>
             <div>
               <div class="border border-1 px-2 py-2.5 flex" :class="{ error: hasPasswordError }">
                 <input
                   v-model="password"
                   class="w-full"
                   id="password"
+                  name="password"
                   :type="passwordType"
                   :pattern="patternPasswordString"
                   aria-required="true"
@@ -193,19 +223,34 @@ const submitRegisterForm = async () => {
                   required
                   @keyup="checkPassword"
                   @blur="checkPasswordInputValid"
+                  data-unit-test="pwd"
                 />
                 <button
                   v-if="passwordType === 'password'"
                   aria-label="Afficher le mot de passe"
                   @click="showPassword"
+                  data-unit-test="display_pwd"
+                  data-cy="display_pwd"
                 >
                   Afficher
                 </button>
-                <button v-else aria-label="Masquer le mot de passe" @click="hidePassword">
+                <button
+                  v-else
+                  aria-label="Masquer le mot de passe"
+                  @click="hidePassword"
+                  data-unit-test="hide_pwd"
+                  data-cy="hide_pwd"
+                >
                   Masquer
                 </button>
               </div>
-              <p role="alert" v-if="hasPasswordError" id="password-error" class="text-red">
+              <p
+                role="alert"
+                v-if="hasPasswordError"
+                id="password-error"
+                class="text-red"
+                data-unit-test="pwd_error"
+              >
                 Veuillez saisir un mot de passe valide.
               </p>
             </div>
@@ -217,9 +262,11 @@ const submitRegisterForm = async () => {
               :aria-disabled="!formIsValid()"
               :class="{ disabled: !formIsValid() }"
               @click="submitRegisterForm()"
+              data-unit-test="create_user_btn"
             >
               Créer
             </button>
+            <!-- TODO in next US create TOAST -->
             <!-- <p>{{ emailError }}</p> -->
           </fieldset>
         </form>

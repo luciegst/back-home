@@ -71,6 +71,17 @@ describe('HomeView page', () => {
       cy.visit('/')
     })
 
+    it('should display the navigation bar and have correct elements', () => {
+      cy.get('[data-cy="nav"]').should('be.visible')
+      cy.get('[data-cy="home_link"]').should('have.attr', 'href', '/')
+      cy.get('[data-cy="account_logo"]').should('be.visible')
+    })
+
+    it('nav should navigate to correct pages', () => {
+      cy.get('[data-cy="account_logo"]').click()
+      cy.url().should('include', '/account/login')
+    })
+
     it('should display home view content and have correct elements', () => {
       cy.get('[data-cy="homeview_main_title"]').should('be.visible')
       cy.get('[data-cy="homeview_subtitle"]').should('be.visible')

@@ -49,12 +49,13 @@ const closeMenu = () => {
         />
       </RouterLink>
       <div class="flex items-center">
-        <RouterLink to="/account">
+        <RouterLink to="/account" data-unit-test="account_link">
           <img
             src="@/assets/icons/user-profile-circle.svg"
             alt="profil utilisateur"
             height="24px"
             width="32px"
+            data-cy="account_logo"
           />
         </RouterLink>
         <button
