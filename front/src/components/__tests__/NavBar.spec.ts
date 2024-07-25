@@ -104,5 +104,9 @@ describe('NavBar', () => {
       const homeLink = wrapper.find('[data-unit-test="home_link"]')
       expect(homeLink.attributes('href')).toBe('/')
     })
+    it('user logo link should go to account page', async () => {
+      const accountLink = wrapper.find('[data-unit-test="account_link"]')
+      expect(accountLink.attributes('href')).toBe('/account')
+    })
   })
 })

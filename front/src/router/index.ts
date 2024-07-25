@@ -34,12 +34,55 @@ export const routes: RouteRecordRaw[] = [
     meta: {
       title: 'Annonces'
     }
+  },
+  {
+    path: '/account',
+    name: 'account',
+    component: () => import('../views/AccountView.vue'),
+    redirect: { name: 'account.login' },
+    meta: {
+      title: 'Connexion'
+    },
+    children: [
+      {
+        path: '/account/login',
+        name: 'account.login',
+        components: {
+          accountView: () => import('../views/LoginView.vue')
+        },
+        meta: {
+          title: 'Connexion'
+        }
+      },
+      {
+        path: '/account/register',
+        name: 'account.register',
+        components: {
+          accountView: () => import('../views/RegisterView.vue')
+        },
+        meta: {
+          title: 'Inscription'
+        }
+      }
+    ]
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else if (to.hash) {
+      return {
+        selector: to.hash,
+        behavior: 'smooth'
+      }
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 const DEFAULT_TITLE = 'Back home'

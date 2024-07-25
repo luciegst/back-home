@@ -9,7 +9,7 @@ const router = useRouter()
 const isMenuOpen = ref<boolean>(false)
 const openMobileMenuBtn = ref<HTMLInputElement | null>(null)
 
-const isMobile = computed(() => deviceStore.deviceType === 'mobile')
+const isMobile = computed<boolean>(() => deviceStore.deviceType === 'mobile')
 
 const goToAdPage = () => {
   router.push({ name: 'ad.page' })
@@ -25,7 +25,7 @@ const closeMenu = () => {
 <template>
   <nav tabindex="-1" id="nav-example" class="h-full" data-cy="nav">
     <div class="flex justify-between bg-light-grey">
-      <RouterLink to="/" data-unit-test="home_link" data-cy="home_link">
+      <RouterLink class="flex items-center" to="/" data-unit-test="home_link" data-cy="home_link">
         <img
           v-if="isMobile"
           class="my-3 mx-3 px-1 py-1"
@@ -39,7 +39,7 @@ const closeMenu = () => {
         <img
           v-else
           class="my-3 mx-3 px-1 py-1"
-          width="208px"
+          width="150px"
           height="45px"
           fetchpriority="high"
           src="@/assets/logo.svg"
@@ -48,9 +48,18 @@ const closeMenu = () => {
           data-cy="desktop_logo"
         />
       </RouterLink>
-      <div class="flex">
+      <div class="flex items-center">
+        <RouterLink to="/account" data-unit-test="account_link">
+          <img
+            src="@/assets/icons/user-profile-circle.svg"
+            alt="profil utilisateur"
+            height="24px"
+            width="32px"
+            data-cy="account_logo"
+          />
+        </RouterLink>
         <button
-          class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold uppercase hover:bg-black hover:text-white"
+          class="cursor-pointer flex gap-2 items-center my-3 mx-3 px-1 py-1 border-solid border-2 text-base font-semibold hover:bg-black hover:text-white"
           aria-haspopup="true"
           data-unit-test="go_ad_page_btn"
           data-cy="go_ad_page_btn"
@@ -60,8 +69,8 @@ const closeMenu = () => {
             v-if="!isMobile"
             src="@/assets/icons/pencil-mark-plus.svg"
             alt="crayon"
-            height="32px"
-            width="32px"
+            height="24px"
+            width="24px"
             data-unit-test="desktop_pen_icon"
             data-cy="desktop_pen_icon"
           />
