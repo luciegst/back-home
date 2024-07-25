@@ -10,6 +10,7 @@ export async function get<T>(url: string, opts?: Object): Promise<T> {
       if (error.response) {
         console.error('Response data: ', error.response.data)
       }
+      throw error
     } else {
       console.error('Unexpected error: ', error)
     }
@@ -27,9 +28,10 @@ export async function post<T>(url: string, data?: Object, opts?: Object): Promis
       if (error.response) {
         console.error('Response data: ', error.response.data)
       }
+      throw error
     } else {
       console.error('Unexpected error: ', error)
     }
-    throw new Error(`Failed to create data`)
+    throw new Error(`Failed to create data: ${error}`)
   }
 }

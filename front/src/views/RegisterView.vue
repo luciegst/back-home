@@ -2,12 +2,17 @@
 import { ref, computed } from 'vue'
 import Banner from '@/components/ui/Banner.vue'
 import { createUser } from '@/services/apiUser'
+import { useRouter } from 'vue-router'
+import axios, { AxiosError } from 'axios'
+
+const router = useRouter()
 
 const passwordType = ref<string>('password')
 const password = ref<string>('')
 const email = ref<string>('')
 const firstName = ref<string>('')
 const lastName = ref<string>('')
+const emailError = ref<string>('')
 const patternPassword = ref<RegExp>(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/)
 const patternEmail = ref<RegExp>(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
 
@@ -86,6 +91,10 @@ const checkPassword = () => {
     : (hasSpecialChar.value = false)
 }
 
+const resetFormValues = () => {
+  ;(firstName.value = ''), (lastName.value = ''), (email.value = ''), (password.value = '')
+}
+
 const submitRegisterForm = async () => {
   const params = {
     first_name: firstName.value,
@@ -95,8 +104,17 @@ const submitRegisterForm = async () => {
   }
   try {
     await createUser(params)
-  } catch (error) {
-    console.error(error)
+    resetFormValues()
+    router.push({ name: 'home' })
+  } catch (e: unknown) {
+    emailError.value = 'Une erreur est survenue.'
+    if (axios.isAxiosError(e) && e.response) {
+      const apiError = e.response.data.error
+      if (apiError.code === 'email_in_use') {
+        emailError.value = 'Cet email est déjà utilisé.'
+      }
+    }
+    console.error('Signup error:', e)
   }
 }
 </script>
@@ -135,7 +153,7 @@ const submitRegisterForm = async () => {
                 @keyup="checkEmail"
                 @blur="checkEmailInputValid"
               />
-              <p v-if="hasEmailError" id="email-error" class="text-red">
+              <p role="alert" v-if="hasEmailError" id="email-error" class="text-red">
                 Veuillez saisir une adresse email valide.
               </p>
             </div>
@@ -187,7 +205,7 @@ const submitRegisterForm = async () => {
                   Masquer
                 </button>
               </div>
-              <p v-if="hasPasswordError" id="password-error" class="text-red">
+              <p role="alert" v-if="hasPasswordError" id="password-error" class="text-red">
                 Veuillez saisir un mot de passe valide.
               </p>
             </div>
@@ -202,6 +220,7 @@ const submitRegisterForm = async () => {
             >
               Créer
             </button>
+            <!-- <p>{{ emailError }}</p> -->
           </fieldset>
         </form>
       </div>
