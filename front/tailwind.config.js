@@ -8,7 +8,9 @@ export default {
       white: '#ffffff',
       black: '#000000',
       'light-grey': '#f3f4f6',
-      red: '#dc2626'
+      red: '#dc2626',
+      'notif-success': '#15803d',
+      'notif-error': '#dc2626'
     },
     extend: {
       gridTemplateColumns: {

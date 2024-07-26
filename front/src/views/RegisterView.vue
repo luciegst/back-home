@@ -4,6 +4,7 @@ import Banner from '@/components/ui/Banner.vue'
 import { createUser } from '@/services/apiUser'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import Notification from '@/components/ui/Notification.vue'
 
 const router = useRouter()
 
@@ -30,6 +31,7 @@ const hasMinLength = ref<boolean>(false)
 const hasCorrectEmail = ref<boolean>(false)
 const hasEmailError = ref<boolean>(false)
 const hasPasswordError = ref<boolean>(false)
+const notification = ref<boolean>(false)
 
 const hasValidEmail = computed(() => hasCorrectEmail.value)
 const patternPasswordString = computed(() => patternPassword.value.source)
@@ -116,6 +118,10 @@ const submitRegisterForm = async () => {
     }
     console.error('Signup error:', e)
   }
+}
+
+const showNotification = () => {
+  notification.value = !notification.value
 }
 </script>
 <template>
@@ -268,6 +274,15 @@ const submitRegisterForm = async () => {
             </button>
             <!-- TODO in next US create TOAST -->
             <!-- <p>{{ emailError }}</p> -->
+            <button @click="showNotification">Show notification</button>
+
+            <Notification
+              :show="notification"
+              :icon="'../assets/icons/cross.svg'"
+              :type="'error'"
+              :text="'message'"
+              @close-notification="showNotification"
+            />
           </fieldset>
         </form>
       </div>
