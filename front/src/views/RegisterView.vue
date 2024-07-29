@@ -185,6 +185,7 @@ const submitRegisterForm = async () => {
                 id="email-error"
                 class="text-red"
                 data-unit-test="email_error"
+                data-cy="email_error"
               >
                 {{ emailErrorMessage }}
               </p>
@@ -285,6 +286,7 @@ const submitRegisterForm = async () => {
               :class="{ disabled: !formIsValid() }"
               @click="submitRegisterForm()"
               data-unit-test="create_user_btn"
+              data-cy="create_user_btn"
             >
               Créer
             </button>
