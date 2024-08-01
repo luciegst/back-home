@@ -2,7 +2,7 @@
 
 This project aims to help people find their lost pets
 
-Current status : Still in progress
+Current status of the project : Still in progress
 
 ## Technologies used
 
