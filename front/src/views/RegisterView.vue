@@ -4,15 +4,22 @@ import Banner from '@/components/ui/Banner.vue'
 import { createUser } from '@/services/apiUser'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import Notification from '@/components/ui/Notification.vue'
+import { useNotificationStore } from '@/stores/notification'
 
 const router = useRouter()
+const notificationStore = useNotificationStore()
 
 const passwordType = ref<string>('password')
 const password = ref<string>('')
 const email = ref<string>('')
 const firstName = ref<string>('')
 const lastName = ref<string>('')
-const emailError = ref<string>('')
+const notificationInfos = ref<{
+  type: string
+  text: string
+  icon: string
+}>(notificationStore.notificationInfos)
 const patternPassword = ref<RegExp>(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{12,}$/)
 const patternEmail = ref<RegExp>(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
 
@@ -30,6 +37,7 @@ const hasMinLength = ref<boolean>(false)
 const hasCorrectEmail = ref<boolean>(false)
 const hasEmailError = ref<boolean>(false)
 const hasPasswordError = ref<boolean>(false)
+const emailErrorMessage = ref<string>('')
 
 const hasValidEmail = computed(() => hasCorrectEmail.value)
 const patternPasswordString = computed(() => patternPassword.value.source)
@@ -39,13 +47,19 @@ const formIsValid = () => {
 }
 
 const checkEmail = () => {
+  hasEmailError.value = false
   patternEmail.value.test(email.value)
     ? (hasCorrectEmail.value = true)
     : (hasCorrectEmail.value = false)
 }
 
 const checkEmailInputValid = () => {
-  return !hasValidEmail.value ? (hasEmailError.value = true) : (hasEmailError.value = false)
+  if (!hasValidEmail.value) {
+    hasEmailError.value = true
+    emailErrorMessage.value = 'Veuillez saisir une adresse email valide.'
+  } else {
+    hasEmailError.value = false
+  }
 }
 
 const showPassword = () => {
@@ -104,17 +118,25 @@ const submitRegisterForm = async () => {
   }
   try {
     await createUser(params)
+    notificationStore.showNotification('Votre compte a bien été créé.', 'IconSuccess', 'success')
     resetFormValues()
-    router.push({ name: 'home' })
+    setTimeout(() => {
+      router.push({ name: 'home' })
+    }, 2000)
   } catch (e: unknown) {
-    emailError.value = 'Une erreur est survenue.'
+    notificationStore.showNotification('Une erreur est survenue.', 'IconError', 'error')
     if (axios.isAxiosError(e) && e.response) {
       const apiError = e.response.data.error
       if (apiError.code === 'email_in_use') {
-        emailError.value = 'Cet email est déjà utilisé.'
+        hasEmailError.value = true
+        emailErrorMessage.value = 'Cette adresse email est déjà utilisée'
       }
     }
     console.error('Signup error:', e)
+  } finally {
+    if (!hasEmailError) {
+      resetFormValues()
+    }
   }
 }
 </script>
@@ -163,8 +185,9 @@ const submitRegisterForm = async () => {
                 id="email-error"
                 class="text-red"
                 data-unit-test="email_error"
+                data-cy="email_error"
               >
-                Veuillez saisir une adresse email valide.
+                {{ emailErrorMessage }}
               </p>
             </div>
 
@@ -263,11 +286,15 @@ const submitRegisterForm = async () => {
               :class="{ disabled: !formIsValid() }"
               @click="submitRegisterForm()"
               data-unit-test="create_user_btn"
+              data-cy="create_user_btn"
             >
               Créer
             </button>
-            <!-- TODO in next US create TOAST -->
-            <!-- <p>{{ emailError }}</p> -->
+            <Notification
+              :icon="notificationInfos.icon"
+              :type="notificationInfos.type"
+              :text="notificationInfos.text"
+            />
           </fieldset>
         </form>
       </div>

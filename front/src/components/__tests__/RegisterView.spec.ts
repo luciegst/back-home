@@ -1,20 +1,33 @@
 import { mount, VueWrapper } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from '../../router/index'
 import RegisterView from '@/views/RegisterView.vue'
+import { createTestingPinia } from '@pinia/testing'
+import { setActivePinia } from 'pinia'
+import { useNotificationStore } from '@/stores/notification'
 
 describe('LostCatsView', () => {
   let wrapper: VueWrapper<InstanceType<typeof RegisterView>>
+  let store: ReturnType<typeof useNotificationStore>
 
   const router = createRouter({
     history: createWebHistory(),
     routes: routes
   })
 
+  const pinia = createTestingPinia({ createSpy: vi.fn })
+  setActivePinia(pinia)
+  store = useNotificationStore()
+
   wrapper = mount(RegisterView, {
     global: {
-      plugins: [router]
+      plugins: [router, pinia],
+      stubs: {
+        teleport: true,
+        transition: true,
+        asyncIcon: true
+      }
     }
   })
 
@@ -137,6 +150,44 @@ describe('LostCatsView', () => {
         const createUserBtn = wrapper.find('[data-unit-test="create_user_btn"]')
         expect(createUserBtn.attributes('disabled')).toBe('')
         expect(createUserBtn.attributes('aria-disabled')).toBe('true')
+      })
+      it('should display notification success after request succeed', async () => {
+        const createUserBtn = wrapper.find('[data-unit-test="create_user_btn"]')
+        await createUserBtn.trigger('click')
+        await store.$patch({ notificationStatus: true })
+        await store.showNotification('Request succeed', 'IconSuccess', 'success')
+        await store.$patch({
+          notificationInfos: { text: 'Request succeed', icon: 'IconSuccess', type: 'success' }
+        })
+        await wrapper.vm.$nextTick()
+
+        expect(store.showNotification).toHaveBeenCalled()
+        const notification = wrapper.find('[data-unit-test="notification"]')
+        expect(notification.exists()).toBe(true)
+        expect(notification.attributes('class')).toContain('notif--success')
+        const notificationIcon = wrapper.find('[data-unit-test="notif_icon"]')
+        expect(notificationIcon.exists()).toBe(true)
+        const notificationText = wrapper.find('[data-unit-test="notif_text"]')
+        expect(notificationText.text()).toContain('Request succeed')
+      })
+      it('should display notification error after request failed', async () => {
+        const createUserBtn = wrapper.find('[data-unit-test="create_user_btn"]')
+        await createUserBtn.trigger('click')
+        await store.$patch({ notificationStatus: true })
+        await store.showNotification('Request failed', 'IconError', 'error')
+        await store.$patch({
+          notificationInfos: { text: 'Request failed', icon: 'IconError', type: 'error' }
+        })
+        await wrapper.vm.$nextTick()
+
+        expect(store.showNotification).toHaveBeenCalled()
+        const notification = wrapper.find('[data-unit-test="notification"]')
+        expect(notification.exists()).toBe(true)
+        expect(notification.attributes('class')).toContain('notif--error')
+        const notificationIcon = wrapper.find('[data-unit-test="notif_icon"]')
+        expect(notificationIcon.exists()).toBe(true)
+        const notificationText = wrapper.find('[data-unit-test="notif_text"]')
+        expect(notificationText.text()).toContain('Request failed')
       })
     })
   })

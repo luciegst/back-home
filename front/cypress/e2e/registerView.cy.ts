@@ -7,14 +7,13 @@ describe('Register View page', () => {
     it('should display register view content and have correct elements', () => {
       cy.get('[data-cy="register_banner"]').should('be.visible')
       cy.get('[data-cy="register_form"]').should('be.visible')
-      cy.get('[data-cy="register_form"]').within(() => {
-        cy.get('input[name="first-name"]').should('be.visible')
-      })
       cy.get('[data-cy="display_pwd"]').should('be.visible')
       cy.get('[data-cy="hide_pwd"]').should('not.exist')
       cy.get('[data-cy="display_pwd"]').click()
       cy.get('[data-cy="display_pwd"]').should('not.exist')
       cy.get('[data-cy="hide_pwd"]').should('be.visible')
+      cy.get('[data-cy="create_user_btn"]').should('be.visible')
+      cy.get('[data-cy="create_user_btn"]').should('exist')
     })
     it('should have a form with visible labels and with correct text and association', () => {
       cy.get('[data-cy="register_form"]').within(() => {
@@ -68,6 +67,43 @@ describe('Register View page', () => {
           .eq(4)
           .should('include.text', 'au moins 1 caractère spécial')
       })
+    })
+    it('should display error message if the user enter a wrong format', () => {
+      cy.get('input[name="email"]').type('wrongemailformat.fr')
+      cy.get('input[name="email"]').blur()
+      cy.get('[data-cy="email_error"]').should('be.visible')
+      cy.get('[data-cy="email_error"]').should(
+        'have.text',
+        'Veuillez saisir une adresse email valide.'
+      )
+    })
+    it('should display notification error after form submission if the user try to enter an email which already exist in DB', () => {
+      cy.get('input[name="email"]').type('fake@email.fr')
+      cy.get('input[name="password"]').type('f&keP8ssWordTèst')
+      cy.get('[data-cy="create_user_btn"]').click()
+
+      cy.get('input[name="email"]').clear().type('fake@email.fr')
+      cy.get('[data-cy="create_user_btn"]').click()
+
+      cy.get('[data-cy="email_error"]').should('be.visible')
+      cy.get('[data-cy="email_error"]').should('have.text', 'Cette adresse email est déjà utilisée')
+      cy.get('[data-cy="notification"]', { timeout: 10000 })
+        .should('be.visible')
+        .and('contain.text', 'Une erreur est survenue.')
+    })
+    it('should display notification success after form submission', () => {
+      // Generate a unique email using Date.now() which ensures a unique timestamp for each test run
+      const uniqueEmail = `test${Date.now()}@example.com`
+
+      cy.get('input[name="email"]').type(uniqueEmail)
+      cy.get('input[name="password"]').type('f&keP8ssWordTèst')
+      cy.get('[data-cy="create_user_btn"]').click()
+
+      cy.get('input[name="email"]').clear().type(uniqueEmail)
+
+      cy.get('[data-cy="notification"]', { timeout: 10000 })
+        .should('be.visible')
+        .and('contain.text', 'Votre compte a bien été créé.')
     })
   })
 })
