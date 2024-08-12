@@ -48,3 +48,11 @@ _Back End_ :
 ## Accessibility
 
 _LightHouse score_ : Project still in progress
+
+## E2E Tests
+
+- In the front end part, use `npm run test:e2e:dev` or `yarn test:e2e:dev` to launch e2e tests
+
+## Unit Tests
+
+- In the front end part, use `npm run test:unit` or `yarn test:unit` to launch unit tests
