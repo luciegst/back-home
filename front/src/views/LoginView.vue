@@ -2,10 +2,22 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Banner from '@/components/ui/Banner.vue'
+import { logUser } from '@/services/apiUser'
+import { useNotificationStore } from '@/stores/notification'
+import Notification from '@/components/ui/Notification.vue'
 
+const notificationStore = useNotificationStore()
 const router = useRouter()
+
 const loginPart = ref<HTMLInputElement | null>(null)
 const passwordType = ref<string>('password')
+const password = ref<string>('')
+const email = ref<string>('')
+const notificationInfos = ref<{
+  type: string
+  text: string
+  icon: string
+}>(notificationStore.notificationInfos)
 
 const showPassword = () => {
   passwordType.value = 'text'
@@ -17,6 +29,31 @@ const hidePassword = () => {
 
 const goToCreateAccount = () => {
   router.push({ name: 'account.register' })
+}
+
+const formIsValid = () => {
+  return password.value && email.value
+}
+
+const resetFormValues = () => {
+  ;(email.value = ''), (password.value = '')
+}
+
+const submitLoginForm = async () => {
+  const params = {
+    email: email.value,
+    password: password.value
+  }
+  try {
+    await logUser(params)
+    resetFormValues()
+    setTimeout(() => {
+      router.push({ name: 'home' })
+    }, 2000)
+  } catch (e: unknown) {
+    notificationStore.showNotification('Une erreur est survenue.', 'IconError', 'error')
+    console.error('Login error')
+  }
 }
 
 onMounted(() => {
@@ -31,11 +68,12 @@ onMounted(() => {
     <Banner :title="'Connexion'" />
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
       <div class="w-[26rem]">
-        <form aria-label="Formulaire de connexion">
+        <form aria-label="Formulaire de connexion" @submit.prevent>
           <fieldset class="flex flex-col gap-3">
             <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
             <input
               class="border border-1 px-2 py-2.5"
+              v-model="email"
               type="text"
               id="email"
               aria-required="true"
@@ -45,6 +83,7 @@ onMounted(() => {
             <div class="border border-1 px-2 py-2.5 flex">
               <input
                 class="w-full"
+                v-model="password"
                 :type="passwordType"
                 id="password"
                 aria-required="true"
@@ -62,7 +101,14 @@ onMounted(() => {
               </button>
             </div>
 
-            <button class="px-2 py-2.5 bg-dark-green mt-3 font-bold" type="submit">
+            <button
+              class="px-2 py-2.5 bg-dark-green mt-3 font-bold"
+              type="submit"
+              :disabled="!formIsValid()"
+              :aria-disabled="!formIsValid()"
+              :class="{ disabled: !formIsValid() }"
+              @click="submitLoginForm()"
+            >
               Se connecter
             </button>
           </fieldset>
@@ -74,9 +120,18 @@ onMounted(() => {
             Créer un compte
           </button>
         </div>
+        <Notification
+          :icon="notificationInfos.icon"
+          :type="notificationInfos.type"
+          :text="notificationInfos.text"
+        />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.disabled {
+  background-color: theme('colors.light-grey');
+}
+</style>
