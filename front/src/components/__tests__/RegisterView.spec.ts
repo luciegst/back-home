@@ -7,7 +7,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
 import { useNotificationStore } from '@/stores/notification'
 
-describe('LostCatsView', () => {
+describe('RegisterView', () => {
   let wrapper: VueWrapper<InstanceType<typeof RegisterView>>
   let store: ReturnType<typeof useNotificationStore>
 

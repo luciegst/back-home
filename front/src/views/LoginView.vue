@@ -5,6 +5,7 @@ import Banner from '@/components/ui/Banner.vue'
 import { logUser } from '@/services/apiUser'
 import { useNotificationStore } from '@/stores/notification'
 import Notification from '@/components/ui/Notification.vue'
+import axios from 'axios'
 
 const notificationStore = useNotificationStore()
 const router = useRouter()
@@ -18,6 +19,8 @@ const notificationInfos = ref<{
   text: string
   icon: string
 }>(notificationStore.notificationInfos)
+const hasNoAccount = ref<boolean>(false)
+const hasPasswordError = ref<boolean>(false)
 
 const showPassword = () => {
   passwordType.value = 'text'
@@ -39,6 +42,14 @@ const resetFormValues = () => {
   ;(email.value = ''), (password.value = '')
 }
 
+const resetPasswordError = () => {
+  hasPasswordError.value = false
+}
+
+const resetEmailError = () => {
+  hasNoAccount.value = false
+}
+
 const submitLoginForm = async () => {
   const params = {
     email: email.value,
@@ -52,6 +63,15 @@ const submitLoginForm = async () => {
     }, 2000)
   } catch (e: unknown) {
     notificationStore.showNotification('Une erreur est survenue.', 'IconError', 'error')
+    if (axios.isAxiosError(e) && e.response) {
+      const apiError = e.response.data.error
+      if (apiError.code === 'user_not_found') {
+        hasNoAccount.value = true
+      }
+      if (apiError.code === 'wrong_password') {
+        hasPasswordError.value = true
+      }
+    }
     console.error('Login error')
   }
 }
@@ -78,9 +98,21 @@ onMounted(() => {
               id="email"
               aria-required="true"
               required
+              data-unit-test="login_email"
+              @keyup="resetEmailError"
             />
+            <p
+              role="alert"
+              v-if="hasNoAccount"
+              id="email-error"
+              class="text-red"
+              data-unit-test="login_email_error"
+              data-cy="login_email_error"
+            >
+              Pas de compte associé à cette adresse email. Veuillez créer votre compte.
+            </p>
             <label class="ryman-eco text-dark-blue font-bold" for="password"> MOT DE PASSE </label>
-            <div class="border border-1 px-2 py-2.5 flex">
+            <div class="border border-1 px-2 py-2.5 flex" :class="{ error: hasPasswordError }">
               <input
                 class="w-full"
                 v-model="password"
@@ -88,6 +120,8 @@ onMounted(() => {
                 id="password"
                 aria-required="true"
                 required
+                data-unit-test="login_pwd"
+                @keyup="resetPasswordError"
               />
               <button
                 v-if="passwordType === 'password'"
@@ -100,6 +134,15 @@ onMounted(() => {
                 Masquer
               </button>
             </div>
+            <p
+              role="alert"
+              v-if="hasPasswordError"
+              id="password-error"
+              class="text-red"
+              data-unit-test="login_pwd_error"
+            >
+              Erreur de mot de passe.
+            </p>
 
             <button
               class="px-2 py-2.5 bg-dark-green mt-3 font-bold"
@@ -107,6 +150,7 @@ onMounted(() => {
               :disabled="!formIsValid()"
               :aria-disabled="!formIsValid()"
               :class="{ disabled: !formIsValid() }"
+              data-unit-test="login_btn"
               @click="submitLoginForm()"
             >
               Se connecter
@@ -133,5 +177,8 @@ onMounted(() => {
 <style scoped>
 .disabled {
   background-color: theme('colors.light-grey');
+}
+.error {
+  border: 2px solid theme('colors.red');
 }
 </style>
