@@ -1,11 +1,16 @@
 import { mount, VueWrapper } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, type Mock } from 'vitest'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from '../../router/index'
 import LoginView from '@/views/LoginView.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
 import { useNotificationStore } from '@/stores/notification'
+import { logUser } from '@/services/apiUser'
+
+vi.mock('@/services/apiUser', () => ({
+  logUser: vi.fn()
+}))
 
 describe('LoginView', () => {
   let wrapper: VueWrapper<InstanceType<typeof LoginView>>
@@ -92,6 +97,58 @@ describe('LoginView', () => {
         expect(notificationIcon.exists()).toBe(true)
         const notificationText = wrapper.find('[data-unit-test="notif_text"]')
         expect(notificationText.text()).toContain('Request failed')
+      })
+    })
+    describe('login errors', () => {
+      it('should have an email error message if user not found in database', async () => {
+        const mockedAxiosPost = logUser as Mock
+
+        mockedAxiosPost.mockRejectedValueOnce({
+          isAxiosError: true,
+          response: {
+            data: {
+              error: {
+                code: 'user_not_found',
+                message: 'user not found'
+              }
+            }
+          }
+        })
+
+        const emailInput = wrapper.find('[data-unit-test="login_email"]')
+        await emailInput.setValue('user@dontexist.fr')
+        const pwd = wrapper.find('[data-unit-test="login_pwd"]')
+        await pwd.setValue('th3sIsAF%kePwd')
+        const LogUserBtn = wrapper.find('[data-unit-test="login_btn"]')
+        await LogUserBtn.trigger('click')
+        await wrapper.vm.$nextTick()
+        const emailErrorMessage = wrapper.find('[data-unit-test="login_email_error"]')
+        expect(emailErrorMessage.exists()).toBe(true)
+      })
+      it('should have a password error message if password is not correct', async () => {
+        const mockedAxiosPost = logUser as Mock
+
+        mockedAxiosPost.mockRejectedValueOnce({
+          isAxiosError: true,
+          response: {
+            data: {
+              error: {
+                code: 'wrong_password',
+                message: 'wrong_password'
+              }
+            }
+          }
+        })
+
+        const emailInput = wrapper.find('[data-unit-test="login_email"]')
+        await emailInput.setValue('user@exist.fr')
+        const pwd = wrapper.find('[data-unit-test="login_pwd"]')
+        await pwd.setValue('th3sIsAF%kePwd')
+        const LogUserBtn = wrapper.find('[data-unit-test="login_btn"]')
+        await LogUserBtn.trigger('click')
+        await wrapper.vm.$nextTick()
+        const pwdErrorMessage = wrapper.find('[data-unit-test="login_pwd_error"]')
+        expect(pwdErrorMessage.exists()).toBe(true)
       })
     })
   })
