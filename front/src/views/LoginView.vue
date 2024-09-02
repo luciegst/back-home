@@ -85,20 +85,22 @@ onMounted(() => {
 
 <template>
   <div>
-    <Banner :title="'Connexion'" />
+    <Banner :title="'Connexion'" :data-c-y="'login_banner'" />
     <div ref="loginPart" tabindex="-1" class="w-full flex justify-center px-14 py-14">
       <div class="w-[26rem]">
-        <form aria-label="Formulaire de connexion" @submit.prevent>
+        <form aria-label="Formulaire de connexion" @submit.prevent data-cy="login_form">
           <fieldset class="flex flex-col gap-3">
-            <label class="ryman-eco text-dark-blue font-bold" for="email"> COURRIEL </label>
+            <label class="ryman-eco text-dark-blue font-bold" for="email">COURRIEL</label>
             <input
               class="border border-1 px-2 py-2.5"
               v-model="email"
               type="text"
               id="email"
+              name="email"
               aria-required="true"
               required
               data-unit-test="login_email"
+              data-cy="login_email"
               @keyup="resetEmailError"
             />
             <p
@@ -111,7 +113,7 @@ onMounted(() => {
             >
               Pas de compte associé à cette adresse email. Veuillez créer votre compte.
             </p>
-            <label class="ryman-eco text-dark-blue font-bold" for="password"> MOT DE PASSE </label>
+            <label class="ryman-eco text-dark-blue font-bold" for="password">MOT DE PASSE</label>
             <div class="border border-1 px-2 py-2.5 flex" :class="{ error: hasPasswordError }">
               <input
                 class="w-full"
@@ -119,18 +121,26 @@ onMounted(() => {
                 :type="passwordType"
                 id="password"
                 aria-required="true"
+                name="password"
                 required
                 data-unit-test="login_pwd"
+                data-cy="login_pwd"
                 @keyup="resetPasswordError"
               />
               <button
                 v-if="passwordType === 'password'"
                 aria-label="Afficher le mot de passe"
+                data-cy="display_pwd"
                 @click="showPassword"
               >
                 Afficher
               </button>
-              <button v-else aria-label="Masquer le mot de passe" @click="hidePassword">
+              <button
+                v-else
+                aria-label="Masquer le mot de passe"
+                @click="hidePassword"
+                data-cy="hide_pwd"
+              >
                 Masquer
               </button>
             </div>
@@ -140,6 +150,7 @@ onMounted(() => {
               id="password-error"
               class="text-red"
               data-unit-test="login_pwd_error"
+              data-cy="login_pwd_error"
             >
               Erreur de mot de passe.
             </p>
@@ -151,6 +162,7 @@ onMounted(() => {
               :aria-disabled="!formIsValid()"
               :class="{ disabled: !formIsValid() }"
               data-unit-test="login_btn"
+              data-cy="login_btn"
               @click="submitLoginForm()"
             >
               Se connecter
