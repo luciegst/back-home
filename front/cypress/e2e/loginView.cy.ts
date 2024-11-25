@@ -34,13 +34,7 @@ describe('Login page', () => {
         cy.focused().should('have.id', 'password')
       })
     })
-    it('should display notification and message error after form submission if the user try to enter an email which does not exist in DB', () => {
-      cy.get('input[name="email"]').type('fake@email.fr')
-      cy.get('input[name="password"]').type('f&keP8ssWordTèst')
-      cy.get('[data-cy="login_btn"]').click()
-
-      cy.get('input[name="email"]').clear().type('fake@email.fr')
-      cy.get('[data-cy="login_btn"]').click()
+    it('should display notification and message error after form submission if the user tries to enter an email that does not exist in DB', () => {
       // Intercept the Axios request and mock the response with a properly structured error object
       cy.intercept('POST', '/api/user/login', {
         statusCode: 401,
@@ -51,24 +45,31 @@ describe('Login page', () => {
           }
         }
       }).as('postLogin')
+
+      // Enter email and password for the non-existent user
+      cy.get('input[name="email"]').type('fake@email.fr')
+      cy.get('input[name="password"]').type('f&keP8ssWordTèst')
+
+      // Click the login button to submit the form
+      cy.get('[data-cy="login_btn"]').click()
+
+      // Wait for the mocked API call
       cy.wait('@postLogin')
 
-      cy.get('[data-cy="login_email_error"]').should('be.visible')
-      cy.get('[data-cy="login_email_error"]').should(
-        'contain.text',
-        'Pas de compte associé à cette adresse email. Veuillez créer votre compte.'
-      )
+      // Assert the error message is displayed for the email field
+      cy.get('[data-cy="login_email_error"]')
+        .should('be.visible')
+        .and(
+          'contain.text',
+          'Pas de compte associé à cette adresse email. Veuillez créer votre compte.'
+        )
+
+      // Assert the notification is displayed
       cy.get('[data-cy="notification"]', { timeout: 10000 })
         .should('be.visible')
         .and('contain.text', 'Une erreur est survenue.')
     })
     it('should display notification and message error after form submission if the user password does not exist in DB', () => {
-      const uniqueEmail = `test${Date.now()}@example.com`
-
-      cy.get('input[name="email"]').type(uniqueEmail)
-      cy.get('input[name="password"]').type('fkkP8ssWordTèst')
-      cy.get('[data-cy="login_btn"]').click()
-
       // Intercept the Axios request and mock the response with a properly structured error object
       cy.intercept('POST', '/api/user/login', {
         statusCode: 401,
@@ -79,6 +80,12 @@ describe('Login page', () => {
           }
         }
       }).as('postLogin')
+      const uniqueEmail = `test${Date.now()}@example.com`
+
+      cy.get('input[name="email"]').type(uniqueEmail)
+      cy.get('input[name="password"]').type('fkkP8ssWordTèst')
+      cy.get('[data-cy="login_btn"]').click()
+
       cy.wait('@postLogin')
 
       cy.get('[data-cy="login_pwd_error"]').should('be.visible')
@@ -88,6 +95,10 @@ describe('Login page', () => {
         .and('contain.text', 'Une erreur est survenue.')
     })
     it('should redirect to home after form submission and if login is a success', () => {
+      cy.intercept('POST', '/api/user/login', {
+        statusCode: 200
+      }).as('postLogin')
+
       // Generate a unique email using Date.now() which ensures a unique timestamp for each test run
       const uniqueEmail = `test${Date.now()}@example.com`
 
@@ -95,9 +106,6 @@ describe('Login page', () => {
       cy.get('input[name="password"]').type('f&keP8ssWordTèst')
       cy.get('[data-cy="login_btn"]').click()
 
-      cy.intercept('POST', '/api/user/login', {
-        statusCode: 200
-      }).as('postLogin')
       cy.wait('@postLogin')
 
       cy.get('input[name="email"]').clear()
