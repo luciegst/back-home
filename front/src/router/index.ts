@@ -8,7 +8,8 @@ export const routes: RouteRecordRaw[] = [
     name: 'home',
     component: HomeView,
     meta: {
-      title: 'Back Home'
+      title: 'Back Home',
+      description: 'Retrouver vos animaux perdus'
     }
   },
   {
@@ -16,7 +17,8 @@ export const routes: RouteRecordRaw[] = [
     name: 'lost.cats',
     component: () => import('../views/LostCatsView.vue'),
     meta: {
-      title: 'Chats Perdus'
+      title: 'Chats Perdus',
+      description: 'Retrouver des chats'
     }
   },
   {
@@ -24,7 +26,8 @@ export const routes: RouteRecordRaw[] = [
     name: 'lost.dogs',
     component: () => import('../views/LostDogsView.vue'),
     meta: {
-      title: 'Chiens Perdus'
+      title: 'Chiens Perdus',
+      description: 'Retrouver des chiens'
     }
   },
   {
@@ -32,7 +35,8 @@ export const routes: RouteRecordRaw[] = [
     name: 'ad.page',
     component: () => import('../views/AdPageView.vue'),
     meta: {
-      title: 'Annonces'
+      title: 'Annonces',
+      description: 'Ecrire une annonce'
     }
   },
   {
@@ -41,7 +45,8 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('../views/AccountView.vue'),
     redirect: { name: 'account.login' },
     meta: {
-      title: 'Connexion'
+      title: 'Connexion',
+      description: 'Connexion'
     },
     children: [
       {
@@ -51,7 +56,8 @@ export const routes: RouteRecordRaw[] = [
           accountView: () => import('../views/LoginView.vue')
         },
         meta: {
-          title: 'Connexion'
+          title: 'Connexion',
+          description: 'Se connecter'
         }
       },
       {
@@ -61,7 +67,8 @@ export const routes: RouteRecordRaw[] = [
           accountView: () => import('../views/RegisterView.vue')
         },
         meta: {
-          title: 'Inscription'
+          title: 'Inscription',
+          description: "S'inscrire"
         }
       }
     ]
@@ -86,8 +93,14 @@ const router = createRouter({
 })
 
 const DEFAULT_TITLE = 'Back home'
+const metaDescription = document.querySelector('meta[name="description"]')
 router.beforeEach((to, from, next) => {
   document.title = String(to.meta.title) || DEFAULT_TITLE
+  if (metaDescription) {
+    metaDescription.setAttribute('content', String(to.meta.description))
+  } else {
+    console.error('Meta tag for description not found!')
+  }
   next()
 })
 
